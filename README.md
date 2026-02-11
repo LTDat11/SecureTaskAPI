@@ -37,29 +37,16 @@ docker ps
 ```
 
 Run PostgreSQL Container:
+Compose V1.
 
 ```bash
-docker run --name securetask-postgres \
-  -e POSTGRES_PASSWORD=123456 \
-  -e POSTGRES_DB=securetaskdb \
-  -p 5432:5432 \
-  -d postgres
+docker-compose up -d
 ```
-
-Check container:
+Compose V2.
 
 ```bash
-docker ps
+docker compose up -d
 ```
-
-Ensure appsettings.json contains:
-
-```
-"ConnectionStrings": {
-  "Default": "Host=localhost;Port=5432;Database=securetaskdb;Username=postgres;Password=123456"
-}
-```
-
 Run Database Migration:
 
 ```bash
@@ -75,7 +62,7 @@ dotnet run
 Swagger UI:
 
 ```bash
-https://localhost:xxxx/swagger
+https://localhost:7125/swagger
 ```
 
 Verify Database

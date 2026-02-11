@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgres
+    container_name: securetask-postgres
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: securetaskdb
+    ports:
+      - "5432:5432"

@@ -1,4 +1,4 @@
-namespace SecureTaskApi.DTOsp;
+namespace SecureTaskApi.DTOs;
 
 public class AuthResponse
 {

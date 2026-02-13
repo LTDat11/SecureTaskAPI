@@ -41,4 +41,21 @@ public class AuthController : ControllerBase
 
         return Ok(new AuthResponse { UserName = user.UserName });
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.UserName == request.UserName);
+
+        if (user == null)
+            return Unauthorized("Invalid username");
+
+        var isValidPassword = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+
+        if (!isValidPassword)
+            return Unauthorized("Invalid password");
+
+        return Ok(new AuthResponse { UserName = user.UserName });
+    }
 }

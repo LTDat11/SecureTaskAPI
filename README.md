@@ -83,4 +83,13 @@ Stop PostgreSQL:
 docker stop securetask-postgres
 ```
 
+## Setup ENV
+
+Generate JWT Secret Key:
+```bash
+openssl rand -base64 32
+```
+
+Copy output and past to .env
+
 

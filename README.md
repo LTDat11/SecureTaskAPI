@@ -92,4 +92,14 @@ openssl rand -base64 32
 
 Copy output and past to .env
 
+Create .env file in root project following below format
+
+```
+JWT_KEY=YOUR_GENERATED_SECRET
+JWT_ISSUER=SecureTaskApi
+JWT_AUDIENCE=SecureTaskApiUser
+
+DATABASE_URL=Host=localhost;Port=5432;Database=securetaskdb;Username=postgres;Password=YourPassWord
+```
+
 

@@ -4,6 +4,10 @@ using SecureTaskApi.Entities;
 using SecureTaskApi.Data;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 namespace SecureTaskApi.Controllers;
@@ -56,6 +60,28 @@ public class AuthController : ControllerBase
         if (!isValidPassword)
             return Unauthorized("Invalid password");
 
-        return Ok(new AuthResponse { UserName = user.UserName });
+        var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY")!;
+        var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "SecureTaskApi";
+        var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "SecureTaskApiUser";
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName)
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: issuer,
+            audience: audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: creds
+        );
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        return Ok(new AuthResponse { UserName = user.UserName, Token = jwt });
     }
 }

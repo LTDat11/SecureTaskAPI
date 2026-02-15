@@ -9,9 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Load environment variables from .env file
-var app = builder.Build();
-
+// Load ENV
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY")
     ?? throw new Exception("JWT_KEY not set");
 
@@ -26,12 +24,12 @@ var connectionString =
     Environment.GetEnvironmentVariable("DATABASE_URL")
     ?? builder.Configuration.GetConnectionString("Default");
 
-// Convert the JWT key to bytes
-var key = Encoding.UTF8.GetBytes(jwtKey);
-
-// Configure Entity Framework to use PostgreSQL
+// DB
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+// JWT
+var key = Encoding.UTF8.GetBytes(jwtKey);
 
 // Configure JWT authentication
 builder.Services.AddAuthentication(options =>
@@ -53,7 +51,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Build the app and apply any pending migrations
+// Build after configuring services
+var app = builder.Build();
+
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
